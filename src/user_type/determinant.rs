@@ -133,17 +133,19 @@ impl<'a> Iterator for DeterminantIter<'a> {
     type Item = f32;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.x == self.iter.m() - 1 && self.y == self.iter.n() - 1 {
+        if self.x == self.iter.m() {
             None
         }
         else {
+            let _ret = self.iter.index(self.x, self.y);
+
             self.y += 1;
             if self.y == self.iter.n() {
                 self.y = 0;
                 self.x += 1
             }
 
-           Some(self.iter.index(self.x, self.y))
+            Some(_ret)
         }
     }
 }
