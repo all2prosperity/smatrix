@@ -1,2 +1,3 @@
-pub mod matrix;
 pub mod determinant;
+pub mod position;
+pub mod vector;
