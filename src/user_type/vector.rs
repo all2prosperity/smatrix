@@ -49,4 +49,15 @@ impl Vector3 {
         let _result = (self.to_cross_determinant() * _right).unwrap();
         Self::from_determinant(_result)
     }
+
+    pub fn magnitude(&self) -> f32 {
+        f32::sqrt(f32::powi(self.x, 2) + f32::powi(self.y, 2) + f32::powi(self.z, 2))
+    }
+
+    pub fn norm(&mut self) {
+        let mag = self.magnitude();
+        self.x = self.x / mag;
+        self.y = self.y / mag;
+        self.z = self.z / mag;
+    }
 }
