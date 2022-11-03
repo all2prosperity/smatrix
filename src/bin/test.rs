@@ -1,4 +1,4 @@
-use computer_graphis::user_type::determinant;
+use computer_graphis::user_type::matrix;
 use computer_graphis::user_type::position;
 use computer_graphis::user_type::vector::Vector3;
 use computer_graphis::user_type::state;
@@ -14,8 +14,8 @@ fn main_not_use() {
     let _vec = Vec::from([1., 2., 3., 4., 5., 6.]);
     let _vec2 = Vec::from([1., 1., 5., 7., 0., 3.]);
 
-    let _d1 = determinant::Determinant::from_vec(2, 3, false, _vec).unwrap();
-    let _d2 = determinant::Determinant::from_vec(3, 2, true, _vec2).unwrap();
+    let _d1 = matrix::Matrix::from_vec(2, 3, false, _vec).unwrap();
+    let _d2 = matrix::Matrix::from_vec(3, 2, true, _vec2).unwrap();
     _d1.debug();
     _d2.debug();
     if let Some(_determinant) =  _d1.t() * _d2 {

@@ -5,7 +5,7 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn transform(&self, pos: &Pos3) ->  Pos3{
-
-    }
+    // pub fn transform(&self, pos: &Pos3) ->  Pos3{
+    //
+    // }
 }

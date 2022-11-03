@@ -1,4 +1,4 @@
-use super::determinant::Determinant;
+use super::matrix::Matrix;
 use super::vector::Vector3;
 use std::ops::{Sub};
 
@@ -24,8 +24,8 @@ impl Pos3 {
         Self {x, y, z}
     }
 
-    pub fn to_determinant(&self) -> Determinant {
+    pub fn to_determinant(&self) -> Matrix {
         let _elements = vec![self.x, self.y, self.z, 1.];
-        Determinant::from_vec(4, 1, true, _elements).unwrap()
+        Matrix::from_vec(4, 1, true, _elements).unwrap()
     }
 }

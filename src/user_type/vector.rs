@@ -1,5 +1,5 @@
-use super::determinant;
-use determinant::Determinant;
+use super::matrix;
+use matrix::Matrix;
 
 
 #[derive(Debug)]
@@ -14,17 +14,17 @@ impl Vector3 {
         Self {x, y, z}
     }
 
-    pub fn to_determinant(&self) -> Determinant {
+    pub fn to_determinant(&self) -> Matrix {
         let _elements = vec![self.x, self.y, self.z];
-        Determinant::from_vec(3, 1, false, _elements).unwrap()
+        Matrix::from_vec(3, 1, false, _elements).unwrap()
     }
 
-    pub fn to_linear_determinant(&self) -> Determinant {
+    pub fn to_linear_determinant(&self) -> Matrix {
         let _elements = vec![self.x, self.y, self.z, 0.0];
-        Determinant::from_vec(4, 1, false, _elements).unwrap()
+        Matrix::from_vec(4, 1, false, _elements).unwrap()
     }
 
-    pub fn from_determinant(determinant: Determinant) -> Self {
+    pub fn from_determinant(determinant: Matrix) -> Self {
         Vector3 {
             x: determinant.index(0, 0),
             y: determinant.index(1, 0),
@@ -39,9 +39,9 @@ impl Vector3 {
         _ret.index(0, 0)
     }
 
-    pub fn to_cross_determinant(&self) -> Determinant {
+    pub fn to_cross_determinant(&self) -> Matrix {
         let _elements = vec![0., -self.z, self.y, self.z, 0., -self.x, -self.y, self.x, 0.];
-        Determinant::from_vec(3, 3, false, _elements).unwrap()
+        Matrix::from_vec(3, 3, false, _elements).unwrap()
     }
 
     pub fn cross(&self, other: &Self) -> Self {
