@@ -1,8 +1,15 @@
 use computer_graphis::user_type::determinant;
 use computer_graphis::user_type::position;
 use computer_graphis::user_type::vector::Vector3;
+use computer_graphis::user_type::state;
 
-fn main() {
+use winit::{
+    event::*,
+    event_loop::{ControlFlow, EventLoop},
+    window::WindowBuilder,
+};
+
+fn main_not_use() {
 
     let _vec = Vec::from([1., 2., 3., 4., 5., 6.]);
     let _vec2 = Vec::from([1., 1., 5., 7., 0., 3.]);
@@ -24,4 +31,8 @@ fn main() {
     let _ret = _vector1.cross(&_vector3);
 
     println!("cross result:{:#?}!", _ret);
+}
+
+fn main() {
+    pollster::block_on(state::run());
 }
