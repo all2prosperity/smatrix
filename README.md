@@ -1,2 +1,2 @@
-# computer-graphics-rust
-Computer graphics 4 rust
+# smatrix
+simple matrix for dognut use
