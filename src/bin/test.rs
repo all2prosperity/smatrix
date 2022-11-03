@@ -28,9 +28,14 @@ fn main_not_use() {
 
     let _vector1 = Vector3::new(0., 0., 1.);
     let _vector3 = Vector3::new(0., 1., 0.);
+    let mut v1 = Vector3::new(1.24,10.8, 9.6);
     let _ret = _vector1.cross(&_vector3);
 
     println!("cross result:{:#?}!", _ret);
+
+    v1.norm();
+
+    println!("norm is {:#?}", v1);
 }
 
 fn main() {
