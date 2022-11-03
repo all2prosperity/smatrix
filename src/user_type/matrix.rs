@@ -169,7 +169,7 @@ impl Matrix {
         }
     }
 
-    pub fn t(&self) -> Self {
+    pub fn transpose(&self) -> Self {
         Matrix {
             m: self.m,
             n: self.n,
@@ -179,7 +179,7 @@ impl Matrix {
         }
     }
 
-    pub fn transform_t(&mut self) {
+    pub fn to_transpose(&mut self) {
         self.t = !self.t;
     }
 

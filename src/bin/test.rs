@@ -1,7 +1,7 @@
-use computer_graphis::user_type::matrix;
-use computer_graphis::user_type::position;
-use computer_graphis::user_type::vector::Vector3;
-use computer_graphis::user_type::state;
+use smatrix::user_type::matrix;
+use smatrix::user_type::position;
+use smatrix::user_type::vector::Vector3;
+use smatrix::user_type::state;
 
 use winit::{
     event::*,
