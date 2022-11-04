@@ -1,5 +1,8 @@
 use std::iter;
 use super::texture;
+use super::camera;
+use super::position::Pos3;
+use super::object_buffer::{ObjectBuffer, Triangle};
 
 use wgpu::util::DeviceExt;
 use winit::{
@@ -121,10 +124,21 @@ impl State {
             alpha_mode: wgpu::CompositeAlphaMode::Auto,
         };
         surface.configure(&device, &config);
-
+        //
+        let _width: u32 = 512;
+        let _height: u32 = 512;
+        let _camera = camera::Camera::new(5., 1., -5., -10.);
+        let mut _buffer = ObjectBuffer::new();
+        _buffer.add_object(Triangle::new(
+                Pos3::new(1., 2., -7.5),
+                Pos3::new(2., 3., -6.),
+                Pos3::new(3., -2., -6.),
+                ));
+        let _buf = _camera.render(_width, _height, &_buffer);
+        //
         let diffuse_bytes = include_bytes!("happy-tree.png");
         let diffuse_texture =
-            texture::Texture::from_bytes(&device, &queue, diffuse_bytes, "happy-tree.png").unwrap();
+            texture::Texture::from_vec(&device, &queue, Some("happy-tree.png"), _width, _height, &_buf).unwrap();
 
         let texture_bind_group_layout =
             device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {

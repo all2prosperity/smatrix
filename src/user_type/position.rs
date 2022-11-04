@@ -2,6 +2,7 @@ use super::matrix::Matrix;
 use super::vector::Vector3;
 use std::ops::{Sub};
 
+#[derive(Debug)]
 pub struct Pos3 {
     pub x: f32,
     pub y: f32,
@@ -25,15 +26,27 @@ impl Pos3 {
     }
 
     pub fn from_matrix(matrix: Matrix) -> Self {
-        Self {
-            x: matrix.index(0, 0),
-            y: matrix.index(1, 0),
-            z: matrix.index(2, 0),
+        let (x, y, z, c) = (
+            matrix.index(0, 0),
+            matrix.index(1, 0),
+            matrix.index(2, 0),
+            matrix.index(3, 0),
+            );
+
+        if matrix.m() == 4 {
+            Self {
+                x: x / c,
+                y: y / c,
+                z: z / c,
+            }
+        }
+        else {
+            Self {x, y, z}
         }
     }
 
     pub fn to_matrix(&self) -> Matrix {
         let _elements = vec![self.x, self.y, self.z, 1.];
-        Matrix::from_vec(4, 1, true, _elements).unwrap()
+        Matrix::from_vec(4, 1, false, _elements).unwrap()
     }
 }

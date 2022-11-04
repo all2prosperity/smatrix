@@ -1,4 +1,5 @@
 use std::num::NonZeroU32;
+use super::output_buffer;
 
 use anyhow::*;
 use image::GenericImageView;
@@ -11,24 +12,19 @@ pub struct Texture {
 }
 
 impl Texture {
-    pub fn from_bytes(
-        device: &wgpu::Device,
-        queue: &wgpu::Queue,
-        bytes: &[u8],
-        label: &str,
-    ) -> Result<Self> {
-        Self::from_image(device, queue, Some(label))
-    }
-
-    pub fn from_image(
+    pub fn from_vec(
         device: &wgpu::Device,
         queue: &wgpu::Queue,
         label: Option<&str>,
+        width: u32,
+        height: u32,
+        buf: &output_buffer::OutputBuffer
     ) -> Result<Self> {
-        let rgba = image::ImageBuffer::from_fn(512, 512, |x, y| {
-            image::Rgba([255, 255, 255, 255])
-        });
-        let dimensions = (512, 512);
+        // let rgba: image::ImageBuffer<Rgba<u8>, Vec<u8>> = image::ImageBuffer::from_fn(512, 512, |x, y| {
+        //     image::Rgba([255, 255, 255, 255])
+        // });
+
+        let dimensions = (width, height);
 
         let size = wgpu::Extent3d {
             width: dimensions.0,
@@ -52,7 +48,7 @@ impl Texture {
                 mip_level: 0,
                 origin: wgpu::Origin3d::ZERO,
             },
-            &rgba,
+            &buf.display,
             wgpu::ImageDataLayout {
                 offset: 0,
                 bytes_per_row: NonZeroU32::new(4 * dimensions.0),
