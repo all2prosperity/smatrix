@@ -20,7 +20,11 @@ impl OutputBuffer {
         }
     }
 
-    pub fn get_depth(x: usize, y: usize) {
-        
+    pub fn get_depth(&self, x: usize, y: usize) -> f32 {
+        self.depth[x * self.width as usize + y]
+    }
+
+    pub fn set_depth(&mut self, x: usize, y: usize, val: f32) {
+        self.depth[x * self.width as usize + y] = val;
     }
 }

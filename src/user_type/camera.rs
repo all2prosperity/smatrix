@@ -26,6 +26,9 @@ impl Camera {
             return None;
         }
 
+        let fov_x = self.fov_y * self.ratio;
+        let (n, f, l, r, b, t) = (self.n, self.z, -fov_x / 2., fov_x / 2., -self.fov_y / 2., self.fov_y / 2.); 
+
         let persp = Matrix::from_vec(4, 4, false, 
                          vec![
                             self.n, 0., 0., 0.,
@@ -34,9 +37,6 @@ impl Camera {
                             0., 0., 1., 0.,
                          ]).unwrap();
 
-        let fov_x = self.fov_y * self.ratio;
-
-        let (n, f, l, r, b, t) = (self.n, self.z, -fov_x / 2., fov_x / 2., -self.fov_y / 2., self.fov_y / 2.); 
         let ort1 = Matrix::from_vec(4, 4, false,
                         vec![
                             2. / (r - l), 0., 0., 0.,
@@ -57,7 +57,6 @@ impl Camera {
             Some(Pos3::from_matrix(_mat))
         }
         else {
-            println!("im 2");
             None
         }
     }
