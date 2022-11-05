@@ -10,6 +10,15 @@ pub struct Pos3 {
 }
 
 
+impl Sub for &Pos3 {
+    type Output = Vector3;
+
+    fn sub(self, other: Self) -> Vector3 {
+        let _matrix = (self.to_matrix() - other.to_matrix()).unwrap();
+        Vector3::from_matrix(_matrix)
+    }
+}
+
 impl Sub for Pos3 {
     type Output = Vector3;
 
@@ -26,6 +35,7 @@ impl Pos3 {
     }
 
     pub fn from_matrix(matrix: Matrix) -> Self {
+        matrix.debug();
         let (x, y, z, c) = (
             matrix.index(0, 0),
             matrix.index(1, 0),

@@ -1,4 +1,5 @@
 use image;
+use super::position::Pos3;
 pub type Display = image::ImageBuffer<image::Rgba<u8>, Vec<u8>>;
 
 pub struct OutputBuffer {
@@ -26,5 +27,20 @@ impl OutputBuffer {
 
     pub fn set_depth(&mut self, x: usize, y: usize, val: f32) {
         self.depth[x * self.width as usize + y] = val;
+    }
+
+    pub fn put_pixel(&mut self, x: u32, y: u32, rgb: image::Rgba<u8>) {
+        self.display.put_pixel(x, y, rgb);
+    }
+
+    pub fn pos_to_pixel(&self, x: f32, y: f32) -> (f32, f32) {
+        (self.width as f32 / 2. * (x + 1.), self.height as f32 / 2. * (1. - y))
+    }
+
+    pub fn pos_to_pixel_pos(&self, pos: &Pos3) -> Pos3{
+        let (x, y) = (self.width as f32 / 2. * (pos.x + 1.), self.height as f32 / 2. * (1. - pos.y));
+        Pos3 {
+            x, y, z: 0.
+        }
     }
 }

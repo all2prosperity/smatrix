@@ -52,6 +52,35 @@ impl Mul for Matrix {
             Some(_ret)
         }
     }
+
+}
+
+impl Mul for &Matrix {
+    type Output = Option<Matrix>;
+
+    fn mul(self, other: Self) -> Option<Matrix> {
+        if self.n() != other.m() {
+            None
+        }
+        else {
+            let _m = self.m();
+            let _n = other.n();
+            let _common_len = self.n();
+            let mut _ret = Matrix::new(self.m(), other.n(), false);
+            for i in 0.._m {
+                for j in 0.._n {
+                    let mut _val = 0.;
+                    for k in 0.._common_len {
+                        _val += self.index(i, k) * other.index(k, j);
+                    }
+
+                    _ret.set(i, j, _val);
+                }
+            }
+
+            Some(_ret)
+        }
+    }
 }
 
 impl Add for Matrix {
