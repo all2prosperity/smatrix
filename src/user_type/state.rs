@@ -136,7 +136,6 @@ impl State {
                 ));
         let _buf = _camera.render(_width, _height, &_buffer);
         //
-        let diffuse_bytes = include_bytes!("happy-tree.png");
         let diffuse_texture =
             texture::Texture::from_vec(&device, &queue, Some("happy-tree.png"), _width, _height, &_buf).unwrap();
 
