@@ -230,6 +230,10 @@ impl Matrix {
 
         self.elements[_idx as usize]
     }
+
+    pub fn result(&self) -> f32 {
+        self.elements[0]
+    }
 }
 
 impl<'a> Iterator for MatrixIter<'a> {

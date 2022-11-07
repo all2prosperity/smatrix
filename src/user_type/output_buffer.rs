@@ -43,4 +43,11 @@ impl OutputBuffer {
             x, y, z: 0.
         }
     }
+
+    pub fn pos_to_pixel_pos_with_z(&self, pos: &Pos3) -> Pos3{
+        let (x, y) = (self.width as f32 / 2. * (pos.x + 1.), self.height as f32 / 2. * (1. - pos.y));
+        Pos3 {
+            x, y, z: pos.z
+        }
+    }
 }

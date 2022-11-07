@@ -130,9 +130,9 @@ impl State {
         let _camera = camera::Camera::new(5., 1., -5., -10.);
         let mut _buffer = ObjectBuffer::new();
         _buffer.add_object(Triangle::new(
-                Pos3::new(1., 2., -7.5),
-                Pos3::new(2., 2.5, -6.),
-                Pos3::new(1.9, -2., -6.),
+                Pos3::new(1., 2., -9.5),
+                Pos3::new(2., 2.5, -7.5),
+                Pos3::new(1.9, -2., -5.5),
                 ));
         let _buf = _camera.render(_width, _height, &_buffer);
         //

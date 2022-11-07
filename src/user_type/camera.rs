@@ -58,32 +58,35 @@ impl Camera {
 
         for _tri in object_buffer.buffer.iter() {
             let trans_poses = _tri.poses.iter().map(|x| (&transform_matrix * &(x.to_matrix())).unwrap());
-            println!("trans matrix:{:?}", trans_poses);
             let trans_poses = trans_poses.map(|x| Pos3::from_matrix(x));
-            let test: Vec<Pos3> = trans_poses.clone().collect();
-            println!("trans pos:{:?}", test);
-            let surface_poses = trans_poses.map(|x| _out.pos_to_pixel_pos(&x));
-            let surface_tri = Triangle::from_vec(surface_poses.collect());
-            // let a = (p3.y - p1.y) * (p3.z - p1.z) - (p2.z - p1.z) * (p3.y - p1.y);
-            //
-            // let b = (p3.x - p1.x) * (p2.z - p1.z) - (p2.x - p1.x) * (p3.z - p1.z);
-            //
-            // let c = (p2.x - p1.x) * (p3.y - p1.y) - (p3.x - p1.x) * (p2.y - p1.y);
-            //
-            // let d =  -(a * p1.x + b * p1.y + c * p1.z);
+            let surface_tri_zero = Triangle::from_vec(
+                trans_poses.clone().map(|x| _out.pos_to_pixel_pos(&x)).collect()
+                );
 
-            println!("surface tri {:?}", surface_tri);
+            let surface_tri_tilt = Triangle::from_vec(
+                trans_poses.map(|x| _out.pos_to_pixel_pos_with_z(&x)).collect()
+                );
 
-            let (sx, ex, sy, ey) = surface_tri.get_edge();
+            println!("surface tri {:?}", surface_tri_tilt);
+
+            let (sx, ex, sy, ey) = surface_tri_zero.get_edge();
+            let depth_matrix = surface_tri_tilt.get_depth_matrix();
             println!("edge :{:?}", (sx, ex, sy, ey));
             // let pos = Pos3::new(330., 420., 0.);
-            // let ret = surface_tri.in_triangle(&pos);
+            // let ret = surface_tri_zero.in_triangle(&pos);
             // println!("ret is {:?}", ret);
             for i in sx..ex {
                 for j in sy..ey {
                     let pos = Pos3::new(i as f32 + 0.5, j as f32 + 0.5, 0.);
-                    if surface_tri.in_triangle(&pos) {
-                        _out.put_pixel(i, j, Rgba([100, 100, 100, 100]));
+                    if surface_tri_zero.in_triangle(&pos) {
+                        let depth = (&depth_matrix * &pos.to_matrix()).unwrap().result();
+                        let cur_depth = _out.get_depth(i as usize, j as usize);
+                        if depth > cur_depth {
+                            _out.set_depth(i as usize, j as usize, depth);
+                            let color = (255 as f32 * (depth + 1.) / 2.).floor() as u8;
+                            // println!("depth:{:?}, {:?}", depth, color);
+                            _out.put_pixel(i, j, Rgba([color, color, color, color]));
+                        }
                     }
                 }
             }

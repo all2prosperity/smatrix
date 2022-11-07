@@ -1,5 +1,6 @@
 use super::position::Pos3;
 use super::vector::Vector3;
+use super::matrix::Matrix;
 
 #[derive(Debug)]
 pub struct Triangle {
@@ -43,6 +44,19 @@ impl Triangle {
         let min_y = min(min(self.poses[0].y, self.poses[1].y), self.poses[2].y);
         let max_y = max(max(self.poses[0].y, self.poses[1].y), self.poses[2].y);
         (min_x.floor() as u32, max_x.ceil() as u32, min_y.floor() as u32, max_y.ceil() as u32)
+    }
+
+    pub fn get_surface_equation(&self) -> (f32, f32, f32, f32){
+        let a = (self.poses[1].y - self.poses[0].y) * (self.poses[2].z - self.poses[0].z) - (self.poses[1].z - self.poses[0].z) * (self.poses[2].y - self.poses[0].y);
+        let b = (self.poses[2].x - self.poses[0].x) * (self.poses[1].z - self.poses[0].z) - (self.poses[1].x - self.poses[0].x) * (self.poses[2].z - self.poses[0].z);
+        let c = (self.poses[1].x - self.poses[0].x) * (self.poses[2].y - self.poses[0].y) - (self.poses[2].x - self.poses[0].x) * (self.poses[1].y - self.poses[0].y);
+        let d =  -(a * self.poses[0].x + b * self.poses[0].y + c * self.poses[0].z);
+        (a, b, c, d)
+    }
+
+    pub fn get_depth_matrix(&self) -> Matrix {
+        let (a, b, c, d) = self.get_surface_equation();
+        Matrix::from_vec(1, 4, false, vec![-a / c, -b / c, 0., -d / c]).unwrap()
     }
 
     pub fn in_triangle(&self, pos: &Pos3) -> bool {
