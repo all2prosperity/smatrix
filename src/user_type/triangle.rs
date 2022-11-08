@@ -39,6 +39,69 @@ impl Triangle {
         }
     }
 
+    pub fn get_horizon_edge(&self, y: f32, sx: u32, ex: u32) -> Option<(u32, u32)> {
+        let mut target_x: Option<u32> = None;
+        for i in 0..3 {
+            let j = if i == 2 {0} else {i + 1};
+            let p1 = &self.poses[i];
+            let p2 = &self.poses[j];
+
+            let x: f32 = p1.x + (p2.x - p1.x) * (y - p1.y) / (p2.y - p1.y);
+            if x < sx as f32 || x >= ex as f32 {
+                continue;
+            }
+
+            let x = x.floor() as u32 - 1;
+            
+            for _x in 0..3 {
+                if self.in_triangle(&Pos3::new((x + _x) as f32 + 0.5, y, 0.)) {
+                    target_x = Some(x + _x);
+                    break;
+                }
+            }
+
+            if target_x != None {
+                break;
+            }
+        }
+
+        if let Some(_target_x) = target_x {
+            let mut l = sx;
+            let mut r = _target_x;
+
+            while l <= r {
+                let mid = (l + r) / 2;
+                if self.in_triangle(&Pos3::new(mid as f32 + 0.5, y, 0.)) {
+                    r = mid - 1;
+                }
+                else {
+                    l = mid + 1;
+                }
+            }
+
+            let s_ret = l;
+
+            l = _target_x;
+            r = ex - 1;
+            while l <= r {
+                let mid = (l + r) / 2;
+                if self.in_triangle(&Pos3::new(mid as f32 + 0.5, y, 0.)) {
+                    l = mid + 1;
+                }
+                else {
+                    r = mid - 1;
+                }
+            }
+
+            let e_ret = r;
+
+            Some((s_ret, e_ret))
+        }
+        else {
+            None
+        }
+    }
+
     pub fn get_edge(&self) -> (u32, u32, u32, u32) {
         let min_x = min(min(self.poses[0].x, self.poses[1].x), self.poses[2].x);
         let max_x = max(max(self.poses[0].x, self.poses[1].x), self.poses[2].x);

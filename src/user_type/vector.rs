@@ -49,9 +49,11 @@ impl Vector3 {
     }
 
     pub fn cross(&self, other: &Self) -> Self {
-        let mut _right = other.to_matrix();
-        let _result = (self.to_cross_matrix() * _right).unwrap();
-        Self::from_matrix(_result)
+        Self {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.x,
+        }
     }
 
     pub fn magnitude(&self) -> f32 {

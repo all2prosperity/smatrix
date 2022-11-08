@@ -82,10 +82,11 @@ impl Camera {
             // let pos = Pos3::new(330., 420., 0.);
             // let ret = surface_tri_zero.in_triangle(&pos);
             // println!("ret is {:?}", ret);
-            for i in sx..ex {
-                for j in sy..ey {
-                    let pos = Pos3::new(i as f32 + 0.5, j as f32 + 0.5, 0.);
-                    if surface_tri_zero.in_triangle(&pos) {
+            //
+            for j in sy..ey {
+                if let Some((_sx, _ex)) = surface_tri_zero.get_horizon_edge(j as f32 + 0.5, sx, ex) {
+                    for i in _sx.._ex {
+                        let pos = Pos3::new(i as f32 + 0.5, j as f32 + 0.5, 0.);
                         let depth = (&depth_matrix * &pos.to_matrix()).unwrap().result();
                         let cur_depth = _out.get_depth(i as usize, j as usize);
                         if depth > cur_depth {
@@ -97,6 +98,22 @@ impl Camera {
                     }
                 }
             }
+
+            // for i in sx..ex {
+            //     for j in sy..ey {
+            //         let pos = Pos3::new(i as f32 + 0.5, j as f32 + 0.5, 0.);
+            //         if surface_tri_zero.in_triangle(&pos) {
+            //             let depth = (&depth_matrix * &pos.to_matrix()).unwrap().result();
+            //             let cur_depth = _out.get_depth(i as usize, j as usize);
+            //             if depth > cur_depth {
+            //                 _out.set_depth(i as usize, j as usize, depth);
+            //                 let color = (255 as f32 * (depth + 1.) / 2.).floor() as u8;
+            //                 // println!("depth:{:?}, {:?}", depth, color);
+            //                 _out.put_pixel(i, j, &[color, color, color, color]);
+            //             }
+            //         }
+            //     }
+            // }
             // println!("edge2 :{:?}", (sx, ex, sy, ey));
         }
 

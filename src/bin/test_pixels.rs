@@ -18,8 +18,8 @@ use smatrix::user_type::render_object::RenderObject;
 use smatrix::user_type::object_loader::ObjectLoader;
 
 
-const WIDTH: u32 = 1000;
-const HEIGHT: u32 = 800;
+const WIDTH: u32 = 320;
+const HEIGHT: u32 = 240;
 const BOX_SIZE: i16 = 64;
 
 /// Representation of the application state. In this example, a box will bounce around the screen.
