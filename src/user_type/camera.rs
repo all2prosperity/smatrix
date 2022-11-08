@@ -1,7 +1,6 @@
 use super::position::Pos3;
 use super::matrix::Matrix;
 use super::object_buffer::{ObjectBuffer, Triangle};
-use image::{Rgba, ImageBuffer};
 use super::output_buffer::{OutputBuffer};
 
 pub struct Camera {
@@ -58,7 +57,14 @@ impl Camera {
 
         for _tri in object_buffer.buffer.iter() {
             let trans_poses = _tri.poses.iter().map(|x| (&transform_matrix * &(x.to_matrix())).unwrap());
-            let trans_poses = trans_poses.map(|x| Pos3::from_matrix(x));
+            let trans_poses = trans_poses.map(|x| Pos3::from_matrix(&x));
+            for pos in trans_poses.clone() {
+                if pos.x < -1. || pos.x > 1. || pos.y > 1. || pos.y < -1.{
+                    println!("will return: {:?}", pos);
+                    return _out;
+                }
+            }
+
             let surface_tri_zero = Triangle::from_vec(
                 trans_poses.clone().map(|x| _out.pos_to_pixel_pos(&x)).collect()
                 );
@@ -67,11 +73,11 @@ impl Camera {
                 trans_poses.map(|x| _out.pos_to_pixel_pos_with_z(&x)).collect()
                 );
 
-            println!("surface tri {:?}", surface_tri_tilt);
+            // println!("surface tri {:?}", surface_tri_tilt);
 
             let (sx, ex, sy, ey) = surface_tri_zero.get_edge();
             let depth_matrix = surface_tri_tilt.get_depth_matrix();
-            println!("edge :{:?}", (sx, ex, sy, ey));
+            // println!("edge :{:?}", (sx, ex, sy, ey));
             // let pos = Pos3::new(330., 420., 0.);
             // let ret = surface_tri_zero.in_triangle(&pos);
             // println!("ret is {:?}", ret);
@@ -85,12 +91,12 @@ impl Camera {
                             _out.set_depth(i as usize, j as usize, depth);
                             let color = (255 as f32 * (depth + 1.) / 2.).floor() as u8;
                             // println!("depth:{:?}, {:?}", depth, color);
-                            _out.put_pixel(i, j, Rgba([color, color, color, color]));
+                            _out.put_pixel(i, j, &[color, color, color, color]);
                         }
                     }
                 }
             }
-            println!("edge2 :{:?}", (sx, ex, sy, ey));
+            // println!("edge2 :{:?}", (sx, ex, sy, ey));
         }
 
         _out   

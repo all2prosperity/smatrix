@@ -1,19 +1,16 @@
 [package]
-name = "computer_graphis"
+name = "smatrix"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cfg-if = "1"
-anyhow = "1.0"
-bytemuck = { version = "1.4", features = [ "derive" ] }
 env_logger = "0.9"
 log = "0.4"
-pollster = "0.2"
-wgpu = "0.14"
 winit = "0.27"
+pixels = "*"
+winit_input_helper = "0.13"
 
 [dependencies.image]
 version = "0.24"
@@ -22,3 +19,7 @@ features = ["png", "jpeg"]
 
 [[bin]]
 name = "test"
+
+
+[[bin]]
+name = "test_pixels"

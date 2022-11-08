@@ -1,15 +1,8 @@
-use computer_graphis::user_type::matrix;
-use computer_graphis::user_type::position;
-use computer_graphis::user_type::vector::Vector3;
-use computer_graphis::user_type::state;
+use smatrix::user_type::matrix;
+use smatrix::user_type::position::Pos3;
+use smatrix::user_type::vector::Vector3;
 
-use winit::{
-    event::*,
-    event_loop::{ControlFlow, EventLoop},
-    window::WindowBuilder,
-};
-
-fn main_not_use() {
+fn main() {
 
     let _vec = Vec::from([1., 2., 3., 4., 5., 6.]);
     let _vec2 = Vec::from([1., 1., 5., 7., 0., 3.]);
@@ -26,6 +19,7 @@ fn main_not_use() {
         println!("failed");
     }
 
+
     let _vector1 = Vector3::new(0., 0., 1.);
     let _vector3 = Vector3::new(0., 1., 0.);
     let mut v1 = Vector3::new(1.24,10.8, 9.6);
@@ -36,8 +30,14 @@ fn main_not_use() {
     v1.norm();
 
     println!("norm is {:#?}", v1);
-}
 
-fn main() {
-    pollster::block_on(state::run());
+    let vertical = Vector3::new(0., 1., 0.);
+    let theta = std::f32::consts::PI / 2.;
+    let rotate = vertical.to_rotation_matrix(theta);
+
+    let pos = Pos3::new(5., 6., 7.);
+    let ret = (&rotate * &pos.to_matrix()).unwrap();
+    let pos = Pos3::from_matrix(&ret);
+    
+    println!("rotate :{:?}, pos:{:?}, sin:{:?}", ret, pos, theta.sin());
 }
