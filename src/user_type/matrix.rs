@@ -20,7 +20,7 @@ pub struct MatrixIter<'a> {
 
 impl<'a> MatrixIter<'a> {
     fn new(iter: &'a Matrix, x: usize, y: usize) -> Self{
-        MatrixIter {
+        Self {
             iter, x, y
         }
     }

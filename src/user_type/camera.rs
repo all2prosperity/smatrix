@@ -1,6 +1,7 @@
 use super::position::Pos3;
 use super::matrix::Matrix;
-use super::object_buffer::{ObjectBuffer, Triangle};
+use super::object_buffer::{ObjectBuffer};
+use super::triangle::Triangle;
 use super::output_buffer::{OutputBuffer};
 
 pub struct Camera {
@@ -55,7 +56,7 @@ impl Camera {
         let mut _out = OutputBuffer::new(width, height);
         let transform_matrix = self.to_transform_matrix();
 
-        for _tri in object_buffer.buffer.iter() {
+        for _tri in object_buffer.iter() {
             let trans_poses = _tri.poses.iter().map(|x| (&transform_matrix * &(x.to_matrix())).unwrap());
             let trans_poses = trans_poses.map(|x| Pos3::from_matrix(&x));
             for pos in trans_poses.clone() {

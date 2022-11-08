@@ -2,7 +2,7 @@ use super::matrix::Matrix;
 use super::vector::Vector3;
 use std::ops::{Sub};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Pos3 {
     pub x: f32,
     pub y: f32,

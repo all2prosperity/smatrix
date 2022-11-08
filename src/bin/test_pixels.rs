@@ -9,10 +9,12 @@ use winit::event_loop::{ControlFlow, EventLoop};
 use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 use smatrix::user_type::camera::Camera;
-use smatrix::user_type::object_buffer::{ObjectBuffer, Triangle};
+use smatrix::user_type::object_buffer::ObjectBuffer;
+use smatrix::user_type::triangle::Triangle;
 use smatrix::user_type::position::Pos3;
 use smatrix::user_type::matrix::Matrix;
 use smatrix::user_type::vector::Vector3;
+use smatrix::user_type::render_object::RenderObject;
 
 
 const WIDTH: u32 = 320;
@@ -26,7 +28,7 @@ struct World {
     velocity_x: i16,
     velocity_y: i16,
     camera: Camera,
-    buffer: ObjectBuffer,
+    obj: RenderObject,
     theta: f32,
 }
 
@@ -88,20 +90,26 @@ fn main() -> Result<(), Error> {
 impl World {
     /// Create a new `World` instance that can draw a moving box.
     fn new() -> Self {
-        let mut _buffer = ObjectBuffer::new();
-        _buffer.add_object(Triangle::new(
-                Pos3::new(1., 2., -9.5),
-                Pos3::new(2., 2.5, -7.5),
-                Pos3::new(1.9, -2., -5.5),
-                ));
-
+        let obj = RenderObject::from_vec(
+            vec![
+                Pos3::new(-0.5, -0.5, -7.),
+                Pos3::new(0.5, -0.5, -7.),
+                Pos3::new(0.5, -0.5, -8.),
+                Pos3::new(-0.5, -0.5, -8.),
+                Pos3::new(-0.5, 0.5, -7.),
+                Pos3::new(0.5, 0.5, -7.),
+                Pos3::new(0.5, 0.5, -8.),
+                Pos3::new(-0.5, 0.5, -8.),
+            ],
+            vec![0, 1, 2, 2, 3, 0, 4, 5, 6, 6, 7, 4],
+            );
         Self {
             box_x: 24,
             box_y: 16,
             velocity_x: 1,
             velocity_y: 1,
             camera: Camera::new(10., 1., -5., -10.),
-            buffer: _buffer,
+            obj: obj,
             theta: 0.,
         }
     }
@@ -123,21 +131,19 @@ impl World {
     ///
     /// Assumes the default texture format: `wgpu::TextureFormat::Rgba8UnormSrgb`
     fn draw(&mut self, frame: &mut [u8]) {
-        let p1 = Pos3::new(1., 2., -9.5);
-        let p2 = Pos3::new(2., 2.5, -7.5);
-        let p3 = Pos3::new(1.9, -2., -5.5);
         let mut buffer = ObjectBuffer::new();
         self.theta += 0.01;
-        let _move_origin = Matrix::move_matrix(-2., -2.5, 7.5);
-        let _mat = Vector3::new(0., 1., 0.).to_rotation_matrix(self.theta);
-        let _move_back = Matrix::move_matrix(2., 2.5, -7.5);
+
+        let _move_origin = Matrix::move_matrix(-0., -0., 7.5);
+        let _mat = Vector3::new(1., 1., 1.).to_rotation_matrix(self.theta);
+        let _move_back = Matrix::move_matrix(0., 0., -7.5);
         let _mat = ((&_move_back * &_mat).unwrap() * _move_origin).unwrap();
 
-        let p1 = Pos3::from_matrix(&(&_mat * &p1.to_matrix()).unwrap());
-        let p2 = Pos3::from_matrix(&(&_mat * &p2.to_matrix()).unwrap());
-        let p3 = Pos3::from_matrix(&(&_mat * &p3.to_matrix()).unwrap());
-        println!("theta:{:?}, p:{:?}, {:?}, {:?}", self.theta, p1, p2, p3);
-        buffer.add_object(Triangle::new(p1, p2, p3));
+
+        let mut new_obj = self.obj.clone();
+        new_obj.mul_matrix(&_mat);
+
+        buffer.add_object(new_obj);
         let _buf = self.camera.render(WIDTH, HEIGHT, &buffer);
 
         frame.copy_from_slice(&_buf.display);
