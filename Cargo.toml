@@ -11,6 +11,7 @@ log = "0.4"
 winit = "0.27"
 pixels = "*"
 winit_input_helper = "0.13"
+tobj = "3.2.3"
 
 [dependencies.image]
 version = "0.24"
@@ -23,3 +24,7 @@ name = "test"
 
 [[bin]]
 name = "test_pixels"
+
+
+[[bin]]
+name = "test_parse_obj"
