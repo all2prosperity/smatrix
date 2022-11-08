@@ -8,7 +8,7 @@ pub struct ObjectLoader {
 }
 
 impl ObjectLoader {
-    fn load_render_Obj(file_name: &str) -> Vec<RenderObject> {
+    pub fn load_render_Obj(file_name: &str) -> Vec<RenderObject> {
         let (models, materials) =
             tobj::load_obj(
                 file_name,
@@ -42,10 +42,15 @@ impl ObjectLoader {
             for face in 0..mesh.face_arities.len() {
                 let end = next_face + mesh.face_arities[face] as usize;
 
-                for i in next_face..end {
-                    indexes.push((mesh.indices[i] - 1) as usize);
-                }
                 let face_indices = &mesh.indices[next_face..end];
+                if face_indices.len() != 3 {
+                    println!(" face[{}].indices          = {:?}", face, face_indices);
+                }
+                else {
+                    for i in face_indices {
+                        indexes.push(*i as usize);
+                    }
+                }
                 // println!(" face[{}].indices          = {:?}", face, face_indices);
 
                 if !mesh.texcoord_indices.is_empty() {

@@ -15,10 +15,11 @@ use smatrix::user_type::position::Pos3;
 use smatrix::user_type::matrix::Matrix;
 use smatrix::user_type::vector::Vector3;
 use smatrix::user_type::render_object::RenderObject;
+use smatrix::user_type::object_loader::ObjectLoader;
 
 
-const WIDTH: u32 = 320;
-const HEIGHT: u32 = 240;
+const WIDTH: u32 = 1000;
+const HEIGHT: u32 = 800;
 const BOX_SIZE: i16 = 64;
 
 /// Representation of the application state. In this example, a box will bounce around the screen.
@@ -90,26 +91,34 @@ fn main() -> Result<(), Error> {
 impl World {
     /// Create a new `World` instance that can draw a moving box.
     fn new() -> Self {
-        let obj = RenderObject::from_vec(
-            vec![
-                Pos3::new(-0.5, -0.5, -7.),
-                Pos3::new(0.5, -0.5, -7.),
-                Pos3::new(0.5, -0.5, -8.),
-                Pos3::new(-0.5, -0.5, -8.),
-                Pos3::new(-0.5, 0.5, -7.),
-                Pos3::new(0.5, 0.5, -7.),
-                Pos3::new(0.5, 0.5, -8.),
-                Pos3::new(-0.5, 0.5, -8.),
-            ],
-            vec![0, 1, 2, 2, 3, 0, 4, 5, 6, 6, 7, 4],
-            );
+        let objs = ObjectLoader::load_render_Obj("G:\\sh3dMod\\FishSoup_Pot.obj");
+        for i in &objs {
+            println!("i len:{:?}, pos:{:?}", i.indexes.len(), i.vertexes.len());
+        }
+
+        // let obj = RenderObject::from_vec(
+        //     vec![
+        //         Pos3::new(-0.5, -0.5, -7.),
+        //         Pos3::new(0.5, -0.5, -7.),
+        //         Pos3::new(0.5, -0.5, -8.),
+        //         Pos3::new(-0.5, -0.5, -8.),
+        //         Pos3::new(-0.5, 0.5, -7.),
+        //         Pos3::new(0.5, 0.5, -7.),
+        //         Pos3::new(0.5, 0.5, -8.),
+        //         Pos3::new(-0.5, 0.5, -8.),
+        //     ],
+        //     vec![0, 1, 2, 2, 3, 0, 4, 5, 6, 6, 7, 4],
+        //     );
+        let obj = &objs[1];
+        println!("obj poses:{:?}", obj.vertexes);
+
         Self {
             box_x: 24,
             box_y: 16,
             velocity_x: 1,
             velocity_y: 1,
             camera: Camera::new(10., 1., -5., -10.),
-            obj: obj,
+            obj: obj.clone(),
             theta: 0.,
         }
     }
@@ -134,7 +143,7 @@ impl World {
         let mut buffer = ObjectBuffer::new();
         self.theta += 0.01;
 
-        let _move_origin = Matrix::move_matrix(-0., -0., 7.5);
+        let _move_origin = Matrix::move_matrix(-0., -0., 0.);
         let _mat = Vector3::new(1., 1., 1.).to_rotation_matrix(self.theta);
         let _move_back = Matrix::move_matrix(0., 0., -7.5);
         let _mat = ((&_move_back * &_mat).unwrap() * _move_origin).unwrap();
